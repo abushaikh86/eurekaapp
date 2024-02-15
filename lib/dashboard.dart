@@ -5,7 +5,9 @@ import 'package:eureka/fragments/daysplan/beats.dart';
 import 'package:eureka/fragments/outlets/outlets.dart';
 import 'package:eureka/global_helper.dart';
 import 'package:eureka/login.dart';
+import 'package:eureka/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(const MyApp());
 
@@ -211,19 +213,22 @@ class DrawerWidget extends StatelessWidget {
               onTap: () {},
             ),
             ListTile(
-              title: Row(
-                children: [
-                  Icon(Icons.logout),
-                  SizedBox(width: 10),
-                  Text('Logout'),
-                ],
-              ),
-              onTap: () => Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => Login()),
-                (route) => false,
-              ),
-            ),
+                title: Row(
+                  children: [
+                    Icon(Icons.logout),
+                    SizedBox(width: 10),
+                    Text('Logout'),
+                  ],
+                ),
+                onTap: () async {
+                  var sharedPref = await SharedPreferences.getInstance();
+                  sharedPref.setBool(SplashScreenState.KEY_LOGIN, false);
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => SplashScreen()),
+                    (route) => false,
+                  );
+                }),
           ],
         ),
       );

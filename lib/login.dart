@@ -190,13 +190,13 @@ class _LoginState extends State<Login> {
                         // print(user_info);
                         if (user_info['error'] != null) {
                           passwordCheck(
-                              isPasswordValid, user_info['error'], '', '', '');
+                              isPasswordValid, user_info['error'], 0, '', '');
                         } else {
                           isPasswordValid = true;
                           passwordCheck(
                               isPasswordValid,
                               user_info['success'],
-                              user_info['company_id'],
+                              int.parse(user_info['company_id']),
                               user_info['fy_year'],
                               user_info['user_id']);
                         }
@@ -261,7 +261,7 @@ class _LoginState extends State<Login> {
   Future<void> passwordCheck(
       isPasswordValid, msg, company_id, fy_year, user_id) async {
     Navigator.pop(context);
-    if (isPasswordValid && company_id != '' && fy_year != '') {
+    if (isPasswordValid && company_id != 0 && fy_year != '') {
       var sharedPref = await SharedPreferences.getInstance();
       sharedPref.setBool(SplashScreenState.KEY_LOGIN, true);
       sharedPref.setInt('company_id', company_id);

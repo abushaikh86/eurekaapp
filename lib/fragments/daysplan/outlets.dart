@@ -90,9 +90,10 @@ class _OutletsListState extends State<OutletsList> {
     // print(beat);
     bool isSubmitted = selectedOutlet
         .where((day) =>
-            day['outlet_id'] == beat['business_partner_id'] &&
-            day['beat_id'] == int.parse(beat['beat_id']))
-        .any((day) => day['is_submit'] == 1);
+            day['outlet_id'].toString() ==
+                beat['business_partner_id'].toString() &&
+            day['beat_id'].toString() == beat['beat_id'].toString())
+        .any((day) => day['is_submit'].toString() == '1');
 
     // If is_submit flag is 1, return 2 (indicating that it is completed)
     if (isSubmitted) {
@@ -101,15 +102,17 @@ class _OutletsListState extends State<OutletsList> {
       // If is_submit flag is not 1, check for other actions (start or skip)
       bool isStart = selectedOutlet
           .where((day) =>
-              day['outlet_id'] == beat['business_partner_id'] &&
-              day['beat_id'] == int.parse(beat['beat_id']))
-          .any((day) => day['is_start'] == 1);
+              day['outlet_id'].toString() ==
+                  beat['business_partner_id'].toString() &&
+              day['beat_id'].toString() == beat['beat_id'].toString())
+          .any((day) => day['is_start'].toString() == '1');
 
       bool isSkip = selectedOutlet
           .where((day) =>
-              day['outlet_id'] == beat['business_partner_id'] &&
-              day['beat_id'] == int.parse(beat['beat_id']))
-          .any((day) => day['is_skip'] == 1);
+              day['outlet_id'].toString() ==
+                  beat['business_partner_id'].toString() &&
+              day['beat_id'].toString() == beat['beat_id'].toString())
+          .any((day) => day['is_skip'].toString() == '1');
 
       // If is_start is 1, return 1 (indicating that it is started)
       if (isStart) {
@@ -125,6 +128,15 @@ class _OutletsListState extends State<OutletsList> {
       return 0;
     }
   }
+
+  // void _showOutletDialog(BuildContext context, outletId) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return OutletDialog(outletID: outletId,beatId: widget.beat_id,);
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -146,6 +158,9 @@ class _OutletsListState extends State<OutletsList> {
                 return BeatCard(
                   beatName: beat['bp_name'],
                   onStartPressed: () async {
+                    // if (beat['outlet_image'] == null) {
+                    //   _showOutletDialog(context, beat['business_partner_id']);
+                    // } else {
                     var flag = isActionSelected(beat, selectedOutlet);
                     // Outlet is not completed, perform start action
                     if (flag != 1) {
@@ -168,6 +183,7 @@ class _OutletsListState extends State<OutletsList> {
                         ),
                       ),
                     );
+                    // }
                   },
                   onSkipPressed: () {
                     // Outlet is not completed, show skip dialog

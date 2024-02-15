@@ -90,9 +90,11 @@ class _BeatsListState extends State<BeatsList> {
               itemBuilder: (context, index) {
                 final beat = beats[index]['get_beat'];
                 final isStart = daysPlan.any((day) =>
-                    day['beat_id'] == beat['beat_id'] && day['is_start'] == 1);
+                    day['beat_id'].toString() == beat['beat_id'].toString() &&
+                    day['is_start'].toString() == '1');
                 final isSkipped = daysPlan.any((day) =>
-                    day['beat_id'] == beat['beat_id'] && day['is_skip'] == 1);
+                    day['beat_id'].toString() == beat['beat_id'].toString() &&
+                    day['is_skip'].toString() == '1');
 
                 return BeatCard(
                   beatName: beat['beat_name'],
