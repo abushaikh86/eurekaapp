@@ -321,8 +321,8 @@ class GlobalHelper {
   Future<dynamic> save_order(order_id) async {
     final response =
         await http.get(Uri.parse('${api}/save_order?order_id=${order_id}'));
-   
-  //  print(response.body);
+
+    //  print(response.body);
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       return jsonData;
@@ -411,9 +411,9 @@ class GlobalHelper {
     }
   }
 
-    Future<Map<String, dynamic>> delete_outlet(outlet_id) async {
-    final response = await http.get(Uri.parse(
-        '${api}/delete_outlet?outlet_id=${outlet_id}'));
+  Future<Map<String, dynamic>> delete_outlet(outlet_id) async {
+    final response = await http
+        .get(Uri.parse('${api}/delete_outlet?outlet_id=${outlet_id}'));
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       return jsonData;
