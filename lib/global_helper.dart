@@ -382,6 +382,20 @@ class GlobalHelper {
     }
   }
 
+  Future<Map<String, dynamic>> get_country_state_district(
+      country_id, state_id) async {
+    var response = await http.get(
+      Uri.parse(
+          '${api}/get_country_state_district?country_id=${country_id}&state_id=${state_id}'),
+    );
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      return jsonData;
+    } else {
+      throw Exception('Failed to Fetch Data: ${response.statusCode}');
+    }
+  }
+
   Future<dynamic> update_outlet(postedData) async {
     var response = await http.post(
       Uri.parse('${api}/update_outlet'),

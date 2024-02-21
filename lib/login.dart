@@ -196,7 +196,7 @@ class _LoginState extends State<Login> {
                           passwordCheck(
                               isPasswordValid,
                               user_info['success'],
-                              int.parse(user_info['company_id']),
+                              user_info['company_id'],
                               user_info['fy_year'],
                               user_info['user_id']);
                         }

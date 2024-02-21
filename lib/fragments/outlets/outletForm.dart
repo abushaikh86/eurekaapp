@@ -35,17 +35,22 @@ class _OutletFormState extends State<OutletForm> {
   final TextEditingController route = TextEditingController();
   final TextEditingController beat = TextEditingController();
 
-  String selectedCountry = '0';
-  String selectedState = 'Select State';
-  String selectedDistrict = '';
   String selectedArea = '0';
   String selectedRoute = '0';
   String selectedBeat = '0';
+
+  String selectedCountry = '0';
+  String selectedState = '0';
+  String selectedDistrict = '0';
 
   final globalHelper = GlobalHelper();
   List<Map<String, dynamic>> areaList = [];
   List<Map<String, dynamic>> routeList = [];
   List<Map<String, dynamic>> beatList = [];
+
+  List<Map<String, dynamic>> countryList = [];
+  List<Map<String, dynamic>> stateList = [];
+  List<Map<String, dynamic>> distrcitList = [];
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -59,11 +64,20 @@ class _OutletFormState extends State<OutletForm> {
     try {
       final response =
           await globalHelper.get_area_route_beat(selectedArea, selectedRoute);
+
+      final response1 = await globalHelper.get_country_state_district(
+          selectedCountry, selectedState);
       if (mounted) {
         setState(() {
           areaList = List<Map<String, dynamic>>.from(response['area']);
           routeList = List<Map<String, dynamic>>.from(response['routes']);
           beatList = List<Map<String, dynamic>>.from(response['beats']);
+
+          countryList = List<Map<String, dynamic>>.from(response1['countries']);
+          stateList = List<Map<String, dynamic>>.from(response1['states']);
+          distrcitList =
+              List<Map<String, dynamic>>.from(response1['districts']);
+
           areaList.insert(0, {
             'area_id': 0,
             'area_name': 'Please select',
@@ -82,6 +96,29 @@ class _OutletFormState extends State<OutletForm> {
             'beat_id': 0,
             'beat_name': 'Please select',
             'beat_number': null,
+            'created_at': null,
+            'updated_at': null,
+            'deleted_at': null,
+          });
+
+          countryList.insert(0, {
+            'country_id': 0,
+            'name': 'Please select',
+            'created_at': null,
+            'updated_at': null,
+            'deleted_at': null,
+          });
+
+          stateList.insert(0, {
+            'id': 0,
+            'name': 'Please select',
+            'created_at': null,
+            'updated_at': null,
+            'deleted_at': null,
+          });
+          distrcitList.insert(0, {
+            'city_id': 0,
+            'city_name': 'Please select',
             'created_at': null,
             'updated_at': null,
             'deleted_at': null,
@@ -112,6 +149,9 @@ class _OutletFormState extends State<OutletForm> {
       selectedArea = item['area_id'];
       selectedRoute = item['route_id'];
       selectedBeat = item['beat_id'];
+      selectedCountry = item['country'];
+      selectedState = item['state'];
+      selectedDistrict = item['district'];
     }
   }
 
@@ -143,21 +183,98 @@ class _OutletFormState extends State<OutletForm> {
                 _buildTextFormField(street, 'Street Name', () => {}, null),
                 _buildTextFormField(landmark, 'Landmark', () => {}, null),
 
-                // Country Dropdown
-                _buildDropdownFormField(
-                  selectedCountry,
-                  CountryStateDistrict.getCountries(),
-                  'Country',
+                //Country dropdown
+                DropdownButtonFormField(
+                  value: selectedCountry,
+                  items: countryList.map<DropdownMenuItem<String>>(
+                    (Map<String, dynamic> option) {
+                      return DropdownMenuItem(
+                        value: option['country_id'].toString(),
+                        child: Text(option['name']),
+                      );
+                    },
+                  ).toList(),
                   onChanged: (newValue) {
                     setState(() {
-                      selectedCountry = newValue;
-                      selectedState = 'Select State';
+                      selectedCountry = newValue!;
+                      selectedState = '0';
+                      selectedDistrict = '0';
+                      initializeData();
                     });
                   },
+                  decoration: InputDecoration(
+                    labelText: 'Country',
+                  ),
+                  style: TextStyle(color: Colors.black), // Set text color
+                  icon: Icon(Icons.arrow_drop_down), // Add dropdown icon
+                  isExpanded: true,
+                  validator: (value) {
+                    if (value == null || value == '0') {
+                      return 'Please select Country';
+                    }
+                    return null;
+                  },
                 ),
-
-                _buildStateDropdownFormField(),
-                _buildDistrictDropdownFormField(),
+                //route dropdown
+                DropdownButtonFormField(
+                  value: selectedState,
+                  items: stateList.map<DropdownMenuItem<String>>(
+                    (Map<String, dynamic> option) {
+                      return DropdownMenuItem(
+                        value: option['id'].toString(),
+                        child: Text(option['name']),
+                      );
+                    },
+                  ).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      selectedState = newValue!;
+                      selectedDistrict = '0';
+                      initializeData();
+                    });
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'State',
+                  ),
+                  style: TextStyle(color: Colors.black), // Set text color
+                  icon: Icon(Icons.arrow_drop_down), // Add dropdown icon
+                  isExpanded: true,
+                  validator: (value) {
+                    if (value == null || value == '0') {
+                      return 'Please select State';
+                    }
+                    return null;
+                  },
+                ),
+                //beat dropdown
+                DropdownButtonFormField(
+                  value: selectedDistrict,
+                  items: distrcitList.map<DropdownMenuItem<String>>(
+                    (Map<String, dynamic> option) {
+                      return DropdownMenuItem(
+                        value: option['city_id'].toString(),
+                        child: Text(option['city_name']),
+                      );
+                    },
+                  ).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      selectedDistrict = newValue!;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'District',
+                  ),
+                  style: TextStyle(color: Colors.black), // Set text color
+                  icon: Icon(Icons.arrow_drop_down), // Add dropdown icon
+                  isExpanded: true,
+                  validator: (value) {
+                    if (value == null || value == '0') {
+                      return 'Please select District';
+                    }
+                    return null;
+                  },
+                ),
 
                 _buildTextFormField(city, 'Name of City', () => {}, null),
                 _buildTextFormField(
@@ -286,77 +403,7 @@ class _OutletFormState extends State<OutletForm> {
         labelText: labelText,
       ),
       validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter $labelText';
-        }
         return null;
-      },
-    );
-  }
-
-  Widget _buildDropdownFormField(
-      String value, List<Map<String, dynamic>> items, String labelText,
-      {Function(String)? onChanged}) {
-    return DropdownButtonFormField(
-      value: value,
-      items: items.map<DropdownMenuItem<String>>(
-        (Map<String, dynamic> option) {
-          return DropdownMenuItem(
-            value: option['id'].toString(),
-            child: Text(option['name']),
-          );
-        },
-      ).toList(),
-      onChanged:
-          onChanged != null ? (String? newValue) => onChanged(newValue!) : null,
-      decoration: InputDecoration(
-        labelText: labelText,
-      ),
-      style: TextStyle(color: Colors.black), // Set text color
-      icon: Icon(Icons.arrow_drop_down), // Add dropdown icon
-      isExpanded: true,
-      validator: (value) {
-        if (value == null || value.isEmpty || value == '0') {
-          return 'Please select $labelText';
-        }
-        return null;
-      },
-    );
-  }
-
-  Widget _buildStateDropdownFormField() {
-    List<Map<String, dynamic>> states =
-        CountryStateDistrict.getStates(int.parse(selectedCountry));
-
-    return _buildDropdownFormField(
-      selectedState,
-      states,
-      'State',
-      onChanged: (newValue) {
-        setState(() {
-          selectedState = newValue;
-          List<Map<String, dynamic>> districts =
-              CountryStateDistrict.getDistricts(selectedState.toString());
-          if (districts.isNotEmpty) {
-            selectedDistrict = districts[0]['id'].toString();
-          }
-        });
-      },
-    );
-  }
-
-  Widget _buildDistrictDropdownFormField() {
-    List<Map<String, dynamic>> districts =
-        CountryStateDistrict.getDistricts(selectedState.toString());
-
-    return _buildDropdownFormField(
-      selectedDistrict,
-      districts,
-      'District',
-      onChanged: (newValue) {
-        setState(() {
-          selectedDistrict = newValue;
-        });
       },
     );
   }
@@ -387,7 +434,8 @@ class _OutletFormState extends State<OutletForm> {
       final itemAddress = widget.itemData!['outlet_address'][0];
       if (item != null && itemAddress != null) {
         postedData['business_partner_id'] = item['business_partner_id'];
-        postedData['bussiness_partner_id'] = itemAddress['bussiness_partner_id'];
+        postedData['bussiness_partner_id'] =
+            itemAddress['bussiness_partner_id'];
       }
     }
 
@@ -397,6 +445,7 @@ class _OutletFormState extends State<OutletForm> {
           Center(child: CircularProgressIndicator()),
     );
 
+    print(postedData);
     var response = await globalHelper.update_outlet(postedData);
 
     if (response['success'] != null) {

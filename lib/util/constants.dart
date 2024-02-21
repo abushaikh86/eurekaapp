@@ -6,9 +6,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 const SUCCESS_MESSAGE = " You will be contacted by us very soon.";
 
 // Api related
-const project_url = "https://parasightdemo.com/3psap/";
-const apiBaseURL = "https://parasightdemo.com/3psap/api";
-const socketUrl = "wss://parasightdemo.com/3psap/api";
+const project_url = "http://192.168.0.117/3psap/";
+const apiBaseURL = "http://192.168.0.117/3psap/api";
+// const socketUrl = "wss://192.168.0.117/3psap/api";
 const delayedTime = 30;
 const refTime = 6;
 const databaseName = "eureka.db";
