@@ -149,9 +149,9 @@ class _OutletFormState extends State<OutletForm> {
       selectedArea = item['area_id'];
       selectedRoute = item['route_id'];
       selectedBeat = item['beat_id'];
-      selectedCountry = item['country'];
-      selectedState = item['state'];
-      selectedDistrict = item['district'];
+      selectedCountry = itemAddress['country'];
+      selectedState = itemAddress['state'];
+      selectedDistrict = itemAddress['district'];
     }
   }
 
@@ -445,7 +445,6 @@ class _OutletFormState extends State<OutletForm> {
           Center(child: CircularProgressIndicator()),
     );
 
-    print(postedData);
     var response = await globalHelper.update_outlet(postedData);
 
     if (response['success'] != null) {
