@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:eureka/fragments/daysplan/beats.dart';
 import 'package:eureka/fragments/outlets/outlets.dart';
 import 'package:eureka/global_helper.dart';
-import 'package:eureka/login.dart';
 import 'package:eureka/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

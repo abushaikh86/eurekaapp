@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:eureka/util/components/outletDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:eureka/fragments/daysplan/outletView.dart';
 import 'package:eureka/global_helper.dart';
@@ -129,14 +130,17 @@ class _OutletsListState extends State<OutletsList> {
     }
   }
 
-  // void _showOutletDialog(BuildContext context, outletId) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return OutletDialog(outletID: outletId,beatId: widget.beat_id,);
-  //     },
-  //   );
-  // }
+  void _showOutletDialog(BuildContext context, outletId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return OutletDialog(
+          outletID: outletId,
+          beatId: widget.beat_id,
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,32 +162,33 @@ class _OutletsListState extends State<OutletsList> {
                 return BeatCard(
                   beatName: beat['bp_name'],
                   onStartPressed: () async {
-                    // if (beat['outlet_image'] == null) {
-                    //   _showOutletDialog(context, beat['business_partner_id']);
-                    // } else {
-                    var flag = isActionSelected(beat, selectedOutlet);
-                    // Outlet is not completed, perform start action
-                    if (flag != 1) {
-                      await _updateSelection(
-                          context,
-                          beat['business_partner_id'],
-                          beat['beat_id'],
-                          1,
-                          0,
-                          '',
-                          0);
-                    }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => OutletViewPage(
-                          outletName: beat['bp_name'],
-                          outletId: beat['business_partner_id'],
-                          beatId: int.parse(beat['beat_id']),
+                    if (beat['outlet_image'] == null) {
+                      _showOutletDialog(context, beat['business_partner_id']);
+                    } else {
+                      var flag = isActionSelected(beat, selectedOutlet);
+                      // Outlet is not completed, perform start action
+                      if (flag != 1) {
+                        await _updateSelection(
+                            context,
+                            beat['business_partner_id'],
+                            beat['beat_id'],
+                            1,
+                            0,
+                            '',
+                            0);
+                      }
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OutletViewPage(
+                            outletName: beat['bp_name'],
+                            outletId: beat['business_partner_id'],
+                            beatId: int.parse(beat['beat_id']),
+                          ),
                         ),
-                      ),
-                    );
-                    // }
+                      );
+                    }
                   },
                   onSkipPressed: () {
                     // Outlet is not completed, show skip dialog

@@ -63,6 +63,7 @@ dependencies:
   image_picker: ^1.0.7
   csc_picker: ^0.2.7
   flutter_typeahead: ^5.1.0
+  geolocator: ^10.1.0
 
 dev_dependencies:
   flutter_test:

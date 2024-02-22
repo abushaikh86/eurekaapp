@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:eureka/global_helper.dart';
 import 'package:eureka/util/constants.dart' as constants;
-import 'package:eureka/util/country_state_distict.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
