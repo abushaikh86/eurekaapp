@@ -30,6 +30,8 @@ class _OutletFormState extends State<OutletForm> {
   final TextEditingController distrcit = TextEditingController();
   final TextEditingController city = TextEditingController();
   final TextEditingController pincode = TextEditingController();
+  final TextEditingController latitude = TextEditingController();
+  final TextEditingController longitude= TextEditingController();
   final TextEditingController area = TextEditingController();
   final TextEditingController route = TextEditingController();
   final TextEditingController beat = TextEditingController();
@@ -145,6 +147,8 @@ class _OutletFormState extends State<OutletForm> {
       selectedDistrict = itemAddress['district'];
       city.text = itemAddress['city'];
       pincode.text = itemAddress['pin_code'].toString();
+      latitude.text = item['latitude'].toString();
+      longitude.text = item['longitude'].toString();
       selectedArea = item['area_id'];
       selectedRoute = item['route_id'];
       selectedBeat = item['beat_id'];
@@ -278,6 +282,10 @@ class _OutletFormState extends State<OutletForm> {
                 _buildTextFormField(city, 'Name of City', () => {}, null),
                 _buildTextFormField(
                     pincode, 'Pin Code', () => {}, TextInputType.number),
+                _buildTextFormField(
+                    latitude, 'Latitude', () => {}, TextInputType.number),
+                _buildTextFormField(
+                    longitude, 'Longitude', () => {}, TextInputType.number),
 
                 //area dropdown
                 DropdownButtonFormField(
@@ -426,6 +434,8 @@ class _OutletFormState extends State<OutletForm> {
       'district': selectedDistrict.toString(),
       'city': city.text.toString(),
       'pin_code': int.parse(pincode.text),
+      'latitude': double.parse(latitude.text),
+      'longitude': double.parse(longitude.text),
     };
 
     if (widget.isEditing && widget.itemData != null) {

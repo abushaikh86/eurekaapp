@@ -130,13 +130,15 @@ class _OutletsListState extends State<OutletsList> {
     }
   }
 
-  void _showOutletDialog(BuildContext context, outletId) {
+  void _showOutletDialog(BuildContext context, outletId,latitude,longitude) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return OutletDialog(
           outletID: outletId,
           beatId: widget.beat_id,
+          latitude: double.parse(latitude),
+          longitude: double.parse(longitude),
         );
       },
     );
@@ -163,7 +165,7 @@ class _OutletsListState extends State<OutletsList> {
                   beatName: beat['bp_name'],
                   onStartPressed: () async {
                     if (beat['outlet_image'] == null) {
-                      _showOutletDialog(context, beat['business_partner_id']);
+                      _showOutletDialog(context, beat['business_partner_id'],beat['latitude'],beat['longitude']);
                     } else {
                       var flag = isActionSelected(beat, selectedOutlet);
                       // Outlet is not completed, perform start action

@@ -10,8 +10,15 @@ import 'package:geolocator/geolocator.dart';
 class OutletDialog extends StatefulWidget {
   final int outletID;
   final int beatId;
+  final double latitude;
+  final double longitude;
 
-  const OutletDialog({super.key, required this.outletID, required this.beatId});
+  const OutletDialog(
+      {super.key,
+      required this.outletID,
+      required this.beatId,
+      required this.latitude,
+      required this.longitude});
   @override
   _OutletDialogState createState() => _OutletDialogState();
 }
@@ -41,7 +48,10 @@ class _OutletDialogState extends State<OutletDialog> {
 
       final position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best,
+          forceAndroidLocationManager:true,
       );
+      
+      print(position);
 
       return {
         "latitude": position.latitude,
@@ -58,55 +68,76 @@ class _OutletDialogState extends State<OutletDialog> {
 
   Future<void> _uploadImage() async {
     final userLocation = await _getUserLocation();
+    // validate range
+    // Calculate the distance between the user's location and the fixed location
+    final distance = Geolocator.distanceBetween(
+      userLocation["latitude"]!,
+      userLocation["longitude"]!,
+      widget.latitude,
+      widget.longitude,
+    );
 
-    final url =
-        '${constants.apiBaseURL}/update_outlet_image'; // Replace with your PHP API endpoint
+    if (distance <= 100) {
+      final url =
+          '${constants.apiBaseURL}/update_outlet_image'; // Replace with your PHP API endpoint
 
-    // Create a multipart request
-    var request = http.MultipartRequest('POST', Uri.parse(url));
+      // Create a multipart request
+      var request = http.MultipartRequest('POST', Uri.parse(url));
 
-    // Add other form data
-    request.fields['outlet_id'] = widget.outletID.toString();
-    request.fields['beat_id'] = widget.beatId.toString();
-    request.fields['latitude'] = userLocation['latitude'].toString();
-    request.fields['longitude'] = userLocation['longitude'].toString();
+      // Add other form data
+      request.fields['outlet_id'] = widget.outletID.toString();
+      request.fields['beat_id'] = widget.beatId.toString();
+      // request.fields['latitude'] = userLocation['latitude'].toString();
+      // request.fields['longitude'] = userLocation['longitude'].toString();
 
-    if (_chequeImage != null) {
-      // Add the image file to the request
-      request.files.add(await http.MultipartFile.fromPath(
-          'outlet_image', _chequeImage!.path));
-    }
-
-    if (_chequeImages.isNotEmpty) {
-      for (var i = 0; i < _chequeImages.length; i++) {
+      if (_chequeImage != null) {
+        // Add the image file to the request
         request.files.add(await http.MultipartFile.fromPath(
-            'outlet_images[]', _chequeImages[i].path));
+            'outlet_image', _chequeImage!.path));
       }
-    }
 
-    // Send the request
-    try {
-      request.fields['posted_data'] = jsonEncode({
-        'outlet_id': widget.outletID,
-        'beat_id': widget.beatId,
-        'latitude': userLocation['latitude'].toString(),
-        'longitude': userLocation['longitude'].toString(),
-      });
-      var response = await request.send();
-
-      print(response);
-      // Check the response
-      if (response.statusCode == 200) {
-        // Successful upload
-        print('uploaded');
-      } else {
-        // Handle errors
-        print('Failed to upload image. Status code: ${response.statusCode}');
-        // print(await response.stream.bytesToString());
+      if (_chequeImages.isNotEmpty) {
+        for (var i = 0; i < _chequeImages.length; i++) {
+          request.files.add(await http.MultipartFile.fromPath(
+              'outlet_images[]', _chequeImages[i].path));
+        }
       }
-    } catch (e) {
-      print('Exception during image upload: $e');
+
+      try {
+        request.fields['posted_data'] = jsonEncode({
+          'outlet_id': widget.outletID,
+          'beat_id': widget.beatId,
+          // 'latitude': userLocation['latitude'].toString(),
+          // 'longitude': userLocation['longitude'].toString(),
+        });
+        var response = await request.send();
+
+        // Check the response
+        if (response.statusCode == 200) {
+          // Successful upload
+          print('uploaded');
+        } else {
+          // Handle errors
+          print('Failed to upload image. Status code: ${response.statusCode}');
+        }
+      } catch (e) {
+        print('Exception during image upload: $e');
+      }
+    } else {
+      // User is not within 100 meters of the fixed location
+      constants.Notification("You are not within 100 meters of outlet");
     }
+  }
+
+  void _showDistanceOutOfRangeDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Text("You are not within 100 meters of outlet"),
+        );
+      },
+    );
   }
 
   Future<void> _getImageFromGallery() async {
@@ -198,7 +229,6 @@ class _OutletDialogState extends State<OutletDialog> {
         ElevatedButton(
           onPressed: () async {
             await _uploadImage();
-            constants.Notification('Outlet Image Updated');
             Navigator.pop(context);
           },
           child: Text('Submit'),
