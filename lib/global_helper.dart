@@ -227,6 +227,7 @@ class GlobalHelper {
         'posted_data': jsonEncode(postedData),
       },
     );
+    // print(response.body);
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       return jsonData;

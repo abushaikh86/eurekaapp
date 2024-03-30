@@ -70,22 +70,79 @@ class DashboardState extends State<Dashboard> {
             ),
           ],
         ),
-        body: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            DashboardCard(
-                moduleName: 'Outlets',
-                count: dashboardData?['outlets'] ?? 0,
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Outlets()));
-                }),
-            SizedBox(width: 5),
-            DashboardCard(
-                moduleName: 'Orders',
-                count: dashboardData?['order_bookings'] ?? 0,
-                onTap: () {}),
-          ],
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  DashboardCard(
+                      moduleName: 'Outlets',
+                      count: dashboardData?['outlets'] ?? 0,
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Outlets()));
+                      }),
+                  SizedBox(width: 5),
+                  DashboardCard(
+                      moduleName: 'Orders',
+                      count: dashboardData?['order_bookings'] ?? 0,
+                      onTap: () {}),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 150,
+                      // Set a specific height for your DashboardCard
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                          onTap: () {},
+                          child: Ink(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16.0),
+                              border: Border.all(color: Colors.grey),
+                            ),
+                            padding: EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Top 5 Formats',
+                                  style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                SizedBox(height: 8.0),
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount:
+                                      dashboardData?['formats']?.length ?? 0,
+                                  itemBuilder: (context, index) {
+                                    return Text(
+                                      dashboardData?['formats']![index],
+                                      style: TextStyle(
+                                        fontSize: 24.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
         endDrawer: DrawerWidget(
           userName:
