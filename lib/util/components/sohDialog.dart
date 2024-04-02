@@ -70,16 +70,21 @@ class _SohDialogState extends State<SohDialog> {
         return AlertDialog(
           title: Text('Item Suggestions'),
           content: Container(
-            height: 70.0,
+            height: 250.0,
             child: SingleChildScrollView(
               child: Column(
                 children: itemList.map((item) {
-                  return ListTile(
-                    title: Text(item['name']),
-                    onTap: () {
-                      updateControllers(item);
-                      Navigator.pop(context);
-                    },
+                  return Column(
+                    children: [
+                      ListTile(
+                        title: Text(item['name'],style: TextStyle(fontSize: 13),),
+                        onTap: () {
+                          updateControllers(item);
+                          Navigator.pop(context);
+                        },
+                      ),
+                      Divider(), // Divider after each ListTile
+                    ],
                   );
                 }).toList(),
               ),
@@ -142,7 +147,7 @@ class _SohDialogState extends State<SohDialog> {
                 children: [
               TextFormField(
                 controller: itemDescriptionController,
-                onChanged: _onDescriptionChanged,
+                onFieldSubmitted: _onDescriptionChanged,
                 decoration: InputDecoration(
                   labelText: 'Item Name',
                 ),
@@ -220,7 +225,7 @@ class _SohDialogState extends State<SohDialog> {
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    'Date: ${prevSohs[i]['date']}',
+                                    'Date: ${constants.formatDate(prevSohs[i]['date'])}',
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 10,

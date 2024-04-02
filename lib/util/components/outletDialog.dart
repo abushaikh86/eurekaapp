@@ -77,7 +77,7 @@ class _OutletDialogState extends State<OutletDialog> {
       widget.longitude,
     );
 
-    if (distance <= 100) {
+    // if (distance <= 100) {
       final url =
           '${constants.apiBaseURL}/update_outlet_image'; // Replace with your PHP API endpoint
 
@@ -87,8 +87,8 @@ class _OutletDialogState extends State<OutletDialog> {
       // Add other form data
       request.fields['outlet_id'] = widget.outletID.toString();
       request.fields['beat_id'] = widget.beatId.toString();
-      // request.fields['latitude'] = userLocation['latitude'].toString();
-      // request.fields['longitude'] = userLocation['longitude'].toString();
+      request.fields['latitude'] = userLocation['latitude'].toString();
+      request.fields['longitude'] = userLocation['longitude'].toString();
 
       if (_chequeImage != null) {
         // Add the image file to the request
@@ -107,8 +107,8 @@ class _OutletDialogState extends State<OutletDialog> {
         request.fields['posted_data'] = jsonEncode({
           'outlet_id': widget.outletID,
           'beat_id': widget.beatId,
-          // 'latitude': userLocation['latitude'].toString(),
-          // 'longitude': userLocation['longitude'].toString(),
+          'latitude': userLocation['latitude'].toString(),
+          'longitude': userLocation['longitude'].toString(),
         });
         var response = await request.send();
 
@@ -123,10 +123,10 @@ class _OutletDialogState extends State<OutletDialog> {
       } catch (e) {
         print('Exception during image upload: $e');
       }
-    } else {
+    // } else {
       // User is not within 100 meters of the fixed location
-      constants.Notification("You are not within 100 meters of outlet");
-    }
+      constants.Notification("Location Updated");
+    // }
   }
 
   void _showDistanceOutOfRangeDialog() {

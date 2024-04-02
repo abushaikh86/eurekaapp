@@ -178,7 +178,7 @@ class _OutletViewPageState extends State<OutletViewPage> {
                   return Card(
                     child: ListTile(
                       title: Text(order['bill_no']),
-                      trailing: Text(order['bill_date'] ?? ''),
+                      trailing: Text(constants.formatDate(order['bill_date']) ?? ''),
                       onTap: () {
                         // Handle card tap, navigate to another page
                         Navigator.push(

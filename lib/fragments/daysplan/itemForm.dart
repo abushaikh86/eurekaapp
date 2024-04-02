@@ -30,6 +30,7 @@ class _AddItemPageState extends State<AddItemPage> {
       TextEditingController();
   final TextEditingController hsnSacController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
+  final TextEditingController mrpController = TextEditingController();
   final TextEditingController unitPriceController = TextEditingController();
   final TextEditingController gstAmountController = TextEditingController();
   final TextEditingController totalInrController = TextEditingController();
@@ -61,9 +62,12 @@ class _AddItemPageState extends State<AddItemPage> {
       itemDescriptionController.text = item['item_name'];
       hsnSacController.text = item['hsn_sac'];
       quantityController.text = item['qty'].toString();
+      mrpController.text = item['mrp'];
       unitPriceController.text = item['taxable_amount'];
       selectedGstOption = item['gst_rate'].toString();
-      totalInrController.text = item['total'];
+      double total = double.tryParse(item['total']) ?? 0.0;
+      totalInrController.text = total.toStringAsFixed(2);
+
     }
   }
 
@@ -92,6 +96,7 @@ class _AddItemPageState extends State<AddItemPage> {
           itemNameController.text = item['name'];
           itemDescriptionController.text = item['consumer_desc'];
           hsnSacController.text = item['hsncode_id'];
+          mrpController.text = item['mrp'].toString();
           unitPriceController.text = response['pricing_price'].toString();
         });
       }
@@ -107,6 +112,7 @@ class _AddItemPageState extends State<AddItemPage> {
           itemNameController.text = item['item_code'];
           itemDescriptionController.text = item['name'];
           hsnSacController.text = item['hsncode_id'];
+          mrpController.text = item['mrp'].toString();
           unitPriceController.text = response['pricing_price'].toString();
         });
       }
@@ -123,16 +129,21 @@ class _AddItemPageState extends State<AddItemPage> {
         return AlertDialog(
           title: Text('Item Suggestions'),
           content: Container(
-            height: 70.0,
+            height: 250.0,
             child: SingleChildScrollView(
               child: Column(
                 children: itemList.map((item) {
-                  return ListTile(
-                    title: Text(item['name']),
-                    onTap: () {
-                      updateControllers(item);
-                      Navigator.pop(context);
-                    },
+                  return Column(
+                    children: [
+                      ListTile(
+                        title: Text(item['name'],style: TextStyle(fontSize: 13),),
+                        onTap: () {
+                          updateControllers(item);
+                          Navigator.pop(context);
+                        },
+                      ),
+                      Divider(), // Divider after each ListTile
+                    ],
                   );
                 }).toList(),
               ),
@@ -178,6 +189,7 @@ class _AddItemPageState extends State<AddItemPage> {
                     TextInputType.number, true),
                 _buildTextFormField(
                     quantityController, 'Quantity', null, TextInputType.number),
+                _buildTextFormField(mrpController, 'MRP',null,TextInputType.number, true),
                 _buildTextFormField(unitPriceController, 'Unit Price (INR)',
                     () {
                   _calculateTotalAmount();
@@ -208,7 +220,7 @@ class _AddItemPageState extends State<AddItemPage> {
       [TextInputType? keyboardType, bool readOnly = false]) {
     return TextFormField(
       controller: controller,
-      onChanged: onChanged != null ? (_) => onChanged(controller.text) : null,
+      onFieldSubmitted: onChanged != null ? (_) => onChanged(controller.text) : null,
       keyboardType: keyboardType,
       enabled: !readOnly,
       decoration: InputDecoration(
@@ -220,6 +232,7 @@ class _AddItemPageState extends State<AddItemPage> {
         }
         return null;
       },
+
     );
   }
 
@@ -255,6 +268,7 @@ class _AddItemPageState extends State<AddItemPage> {
     var company_id = sharedPref.getInt('company_id');
 
     var postedData = {
+      'company_id':company_id,
       'order_booking_id': widget.orderId,
       'outlet_id': widget.outletId,
       'company_id': company_id,
@@ -262,6 +276,7 @@ class _AddItemPageState extends State<AddItemPage> {
       'item_name': itemDescriptionController.text,
       'hsn_sac': hsnSacController.text,
       'qty': quantityController.text,
+      'mrp': mrpController.text,
       'unit_price': unitPriceController.text,
       'gst_rate': selectedGstOption,
       'total': totalInrController.text,

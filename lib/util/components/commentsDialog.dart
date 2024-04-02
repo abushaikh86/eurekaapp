@@ -121,7 +121,7 @@ class _CommentsDialogState extends State<CommentsDialog> {
                           child: ListTile(
                             title: Text(prevComments[i]['comments']),
                             subtitle: Text(
-                              '${prevComments[i]['date']}',
+                              '${constants.formatDateTime(prevComments[i]['date'])}',
                               style: TextStyle(color: Colors.grey),
                             ),
                           ),

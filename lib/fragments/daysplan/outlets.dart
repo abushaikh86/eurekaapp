@@ -164,9 +164,9 @@ class _OutletsListState extends State<OutletsList> {
                 return BeatCard(
                   beatName: beat['bp_name'],
                   onStartPressed: () async {
-                    // if (beat['outlet_image'] == null) {
-                    //   _showOutletDialog(context, beat['business_partner_id'],beat['latitude'],beat['longitude']);
-                    // } else {
+                    if (beat['outlet_image'] == null || beat['outlet_image'] == '') {
+                      _showOutletDialog(context, beat['business_partner_id'],beat['latitude'],beat['longitude']);
+                    } else {
                       var flag = isActionSelected(beat, selectedOutlet);
                       // Outlet is not completed, perform start action
                       if (flag != 1) {
@@ -190,7 +190,7 @@ class _OutletsListState extends State<OutletsList> {
                           ),
                         ),
                       );
-                    // }
+                    }
                   },
                   onSkipPressed: () {
                     // Outlet is not completed, show skip dialog

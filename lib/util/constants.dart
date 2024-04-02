@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
+
 
 const SUCCESS_MESSAGE = " You will be contacted by us very soon.";
 
@@ -21,6 +23,13 @@ Color secColor = Color.fromRGBO(64, 78, 103, 1);
 
 // Asset Constants
 const navBarLogoImage = "images/logo-alt.png";
+
+formatDate(date){
+  return DateFormat('dd-MM-y').format(DateTime.parse(date));
+}
+formatDateTime(date){
+  return DateFormat('dd-MM-y H:m:s').format(DateTime.parse(date));
+}
 
 void Notification(var message) {
   Fluttertoast.showToast(

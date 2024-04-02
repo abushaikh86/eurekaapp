@@ -39,8 +39,8 @@ class _ViewOrderState extends State<ViewOrder> {
       if (mounted) {
         setState(() {
           order = List<Map<String, dynamic>>.from(response['order']);
-          total = response['total_sum'].toString();
-          taxTotal = response['gst_amount_sum'].toString();
+          total = response['total_sum'].toStringAsFixed(2);
+          taxTotal = response['gst_amount_sum'].toStringAsFixed(2);
           grossTotal = (response['total_sum'] + response['gst_amount_sum']).round();
         });
       }
@@ -95,9 +95,9 @@ class _ViewOrderState extends State<ViewOrder> {
                         subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(order.isNotEmpty
-                                  ? order[0]['bill_date']
-                                  : ''),
+                              Text("Date: ${order.isNotEmpty
+                                  ? constants.formatDate(order[0]['bill_date'])
+                                  : ''}"),
                               Text("Total: $total"),
                               Text("Tax: $taxTotal"),
                               Text("Gross: $grossTotal"),
@@ -176,8 +176,7 @@ class _ViewOrderState extends State<ViewOrder> {
                                               orderItems[i]['qty']),
                                         ),
                                         ListTile(
-                                          title: Text("Gross Total: " +
-                                              orderItems[i]['gross_total']),
+                                          title: Text("Gross Total: $grossTotal"),
                                         ),
                                         Row(
                                           mainAxisAlignment:

@@ -96,7 +96,7 @@ class DashboardState extends State<Dashboard> {
                 children: [
                   Expanded(
                     child: SizedBox(
-                      height: 150,
+                      height: 220,
                       // Set a specific height for your DashboardCard
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -108,31 +108,34 @@ class DashboardState extends State<Dashboard> {
                               border: Border.all(color: Colors.grey),
                             ),
                             padding: EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Top 5 Formats',
-                                  style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                                SizedBox(height: 8.0),
-                                ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount:
-                                      dashboardData?['formats']?.length ?? 0,
-                                  itemBuilder: (context, index) {
-                                    return Text(
-                                      dashboardData?['formats']![index],
-                                      style: TextStyle(
-                                        fontSize: 24.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Top 5 Formats',
+                                    style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  Divider(),
+                                  SizedBox(height: 8.0),
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount:
+                                        dashboardData?['formats']?.length ?? 0,
+                                    itemBuilder: (context, index) {
+                                      return Text(
+                                        dashboardData?['formats']![index],
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -191,6 +194,7 @@ class DashboardCard extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 18.0, fontWeight: FontWeight.w400),
                     ),
+                    Divider(),
                     SizedBox(height: 8.0),
                     Text(
                       count.toString(),
